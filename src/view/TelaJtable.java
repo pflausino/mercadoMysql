@@ -8,6 +8,8 @@ package view;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import model.bean.Produto;
+import model.dao.ProdutoDAO;
 
 /**
  *
@@ -192,15 +194,14 @@ public class TelaJtable extends javax.swing.JFrame {
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         
-        DefaultTableModel dtmProdutos = (DefaultTableModel)jtProdutos.getModel();
+        Produto p = new Produto();
+        ProdutoDAO dao = new ProdutoDAO();
         
-        Object[] dados = {
-            txtDescricao.getText(),
-            txtQtd.getText(),
-            txtPreco.getText()
-        };
+        p.setDescricao(txtDescricao.getText());
+        p.setQtd(Integer.parseInt(txtQtd.getText()));
+        p.setPreco(Double.parseDouble(txtPreco.getText()));
         
-        dtmProdutos.addRow(dados);
+        dao.create(p);
                 
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
