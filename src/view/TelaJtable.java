@@ -22,23 +22,22 @@ public class TelaJtable extends javax.swing.JFrame {
      */
     public TelaJtable() {
         initComponents();
-        
+
         DefaultTableModel modelo = (DefaultTableModel) jtProdutos.getModel();
 
         jtProdutos.setRowSorter(new TableRowSorter(modelo));
-        
-        
+
         readJTable();
     }
-    
-    public void readJTable(){
-        
+
+    public void readJTable() {
+
         DefaultTableModel modelo = (DefaultTableModel) jtProdutos.getModel();
         modelo.setNumRows(0);
         ProdutoDAO pdao = new ProdutoDAO();
-        
-        for(Produto p: pdao.read()){
-            
+
+        for (Produto p : pdao.read()) {
+
             modelo.addRow(new Object[]{
                 p.getId(),
                 p.getDescricao(),
@@ -210,57 +209,79 @@ public class TelaJtable extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        
+
         Produto p = new Produto();
         ProdutoDAO dao = new ProdutoDAO();
-        
+
         p.setDescricao(txtDescricao.getText());
         p.setQtd(Integer.parseInt(txtQtd.getText()));
         p.setPreco(Double.parseDouble(txtPreco.getText()));
-        
+
         dao.create(p);
-        
+
         txtDescricao.setText("");
         txtPreco.setText("");
         txtQtd.setText("");
-        
+
         readJTable();
-                
+
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         if (jtProdutos.getSelectedRow() != -1) {
-            
-            DefaultTableModel dtmProdutos = (DefaultTableModel)jtProdutos.getModel();
-            dtmProdutos.removeRow(jtProdutos.getSelectedRow());
-        }else{
+
+            Produto p = new Produto();
+            ProdutoDAO dao = new ProdutoDAO();
+
+            p.setId((int) jtProdutos.getValueAt(jtProdutos.getSelectedRow(), 0));
+
+            dao.delete(p);
+
+            txtDescricao.setText("");
+            txtPreco.setText("");
+            txtQtd.setText("");
+
+            readJTable();
+
+        } else {
             JOptionPane.showMessageDialog(this, "Selecione algum item");
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         //Editando o valor na tabela
         if (jtProdutos.getSelectedRow() != -1) {
-            
-            jtProdutos.setValueAt(txtDescricao.getText(),jtProdutos.getSelectedRow() , 0);
-            jtProdutos.setValueAt(txtQtd.getText(),jtProdutos.getSelectedRow() , 1);
-            jtProdutos.setValueAt(txtPreco.getText(),jtProdutos.getSelectedRow() , 2);
-            
-           
+
+            Produto p = new Produto();
+            ProdutoDAO dao = new ProdutoDAO();
+
+            p.setDescricao(txtDescricao.getText());
+            p.setQtd(Integer.parseInt(txtQtd.getText()));
+            p.setPreco(Double.parseDouble(txtPreco.getText()));
+            p.setId((int) jtProdutos.getValueAt(jtProdutos.getSelectedRow(), 0));
+
+            dao.create(p);
+
+            txtDescricao.setText("");
+            txtPreco.setText("");
+            txtQtd.setText("");
+
+            readJTable();
+
         }
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jtProdutosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtProdutosMouseClicked
-            //Selecionando itens na tabela e carregando no formulario
+        //Selecionando itens na tabela e carregando no formulario
         if (jtProdutos.getSelectedRow() != -1) {
-            
-            txtDescricao.setText(jtProdutos.getValueAt(jtProdutos.getSelectedRow(),0).toString());
-            txtPreco.setText(jtProdutos.getValueAt(jtProdutos.getSelectedRow(),2).toString());
-            txtQtd.setText(jtProdutos.getValueAt(jtProdutos.getSelectedRow(),1).toString());
+
+            txtDescricao.setText(jtProdutos.getValueAt(jtProdutos.getSelectedRow(), 1).toString());
+            txtPreco.setText(jtProdutos.getValueAt(jtProdutos.getSelectedRow(), 3).toString());
+            txtQtd.setText(jtProdutos.getValueAt(jtProdutos.getSelectedRow(), 2).toString());
         }
 
     }//GEN-LAST:event_jtProdutosMouseClicked

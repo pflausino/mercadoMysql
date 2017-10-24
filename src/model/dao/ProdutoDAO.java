@@ -1,5 +1,5 @@
 /*
- * CRUD para mysql no java
+ * CRUD para mysql no java 
  */
 package model.dao;
 
@@ -90,6 +90,68 @@ public class ProdutoDAO {
         }            
         
         return produtos;
+    }
+    
+    //Metodo para atualizar, similar ao create
+    public void update(Produto p){
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            //SQL para incerção, os campos com "?" sao subistituidos pelo 
+            //PreparedStatement(stmt)
+            stmt = con.prepareStatement(
+                "UPDATE produtos SET "
+                        + "descricao = ?, qtd = ?, preco = ?"
+                        + "WHERE id = ?"
+            );
+            
+            stmt.setString(1, p.getDescricao());
+            stmt.setInt(2, p.getQtd());
+            stmt.setDouble(3, p.getPreco());
+            stmt.setInt(4, p.getId());
+
+            //Enviara ao BD
+            stmt.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Atualizado com Sucesso");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao Atualizar: "+ex);
+        } finally {
+            //codigo para encerar a conexao com o bd(sera executado com sucesso
+            //ou falha) por isso sob o encadeamento "finally"
+            ConnectionFactory.closeConnection(con, stmt);
+        }
+
+    }
+    public void delete(Produto p){
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            //SQL para incerção, os campos com "?" sao subistituidos pelo 
+            //PreparedStatement(stmt)
+            stmt = con.prepareStatement(
+                "DELETE FROM produtos WHERE id = ? "
+                        
+            );
+
+            stmt.setInt(1, p.getId());
+
+            //Enviara ao BD
+            stmt.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Excluido com Sucesso");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao Excluir: "+ex);
+        } finally {
+            //codigo para encerar a conexao com o bd(sera executado com sucesso
+            //ou falha) por isso sob o encadeamento "finally"
+            ConnectionFactory.closeConnection(con, stmt);
+        }
+
     }
     
 }
