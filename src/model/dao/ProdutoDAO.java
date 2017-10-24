@@ -153,5 +153,51 @@ public class ProdutoDAO {
         }
 
     }
+     public List<Produto> searchDesc(String desc){
+        
+        //abre a conexao, prepara a SQL, traz um resultado,cria lista resultado
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Produto> produtos = new ArrayList<>();
+        
+        try {
+            stmt = con.prepareStatement(
+                    "SELECT * FROM produtos "
+                    + "WHERE descricao LIKE ?"
+            );
+            stmt.setString(1, "%"+desc+"%");
+            
+            rs = stmt.executeQuery();
+            
+            //laço de repetição para listar o retorno
+            while (rs.next()) {
+               
+                Produto produto = new Produto();
+                produto.setId(rs.getInt("id"));
+                produto.setDescricao(rs.getString("descricao"));
+                produto.setQtd(rs.getInt("qtd"));
+                produto.setPreco(rs.getDouble("preco"));
+                produtos.add(produto);
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
+                    null,"Erro ao Receber dados do banco: "+ ex
+            );
+        }finally{
+            
+            //codigo para encerar a conexao com o bd(sera executado com sucesso
+            //ou falha) por isso sob o encadeamento "finally"
+            ConnectionFactory.closeConnection(con, stmt,rs);
+            
+        }            
+        
+        return produtos;
+    }
     
+
+
 }
+    
+
